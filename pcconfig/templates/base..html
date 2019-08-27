@@ -1,0 +1,62 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>PC Configurator</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/ico"/>
+    {% block head %}
+    {% endblock %}
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+    {% block styles %}
+    {% endblock %}
+
+    </style>
+
+</head>
+<body>
+
+    
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% else %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {% endif %}
+                <strong style="margin: 0 20%; text-align: center">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% block body %}
+
+    <div class="container">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+{% endblock %}
+
+</body>
+
+</html>

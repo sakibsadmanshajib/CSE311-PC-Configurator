@@ -26,7 +26,30 @@
 </head>
 <body>
 
-    
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" style="margin: 0 15px">
+                    <a class="nav-link" href="{% url 'pcconfig:home' %}">Home</a>
+                </li>
+                <li class="nav-item" style="margin: 0 15px">
+                    <a class="nav-link" href="{% url 'webapp:createPC' %}">Create new PC</a>
+                </li>
+            </ul>
+
+            <!-- <a style="color: #ffffff80; margin-right: 15px" href="{% url 'webapp:requirements' %}">Requirements</a> -->
+            {% if user.is_authenticated %}
+                <a class="btn btn-danger" href="{% url 'webapp:user_login' %}">Login</a>
+            {% else %}
+                <a class="btn btn-danger" href="{% url 'webapp:user_logout' %}">Logout</a>
+            {% endif %}
+        </div>
+    </nav>
 
     {% if messages %}
         {% for message in messages %}

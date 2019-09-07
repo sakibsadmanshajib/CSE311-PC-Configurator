@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class PC(models.Model):
     cpu = models.ForeignKey('CPU', on_delete=models.CASCADE)
     ram = models.ForeignKey('RAM', on_delete=models.CASCADE)
-    cpu = models.ForeignKey('GPU', on_delete=models.CASCADE)
+    gpu = models.ForeignKey('GPU', on_delete=models.CASCADE)
     motherboard = models.ForeignKey('Motherboard', on_delete=models.CASCADE)
     storage = models.ForeignKey('Storage', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)

@@ -62,14 +62,27 @@ def createPC(request):
                 author = request.user
             )
             pc.save()
+            messages.success(request, "Successfully added a new PC!")
+            return redirect('pcconfig:viewPC', PC_id=pc.pc_id)
+        
+        else:
+            messages.warning(request, "Couldn't add a new entry!")
+            return redirect('pcconfig:home')
+        
+    else:
+        form = AddPC()
+        return render(request, 'pcconfig/add.html', {'form': form})
 
 
 def viewPC(request, PC_id):
 
     # View individual PC entries. If the request.user is equal to author of PC, they have the authorization to edit it. 
-    pass
 
-"""Use a decorator user_passes_check to verify only the author has the right to edit their entries.
+    pc = PC.objects.get(id=PC_id)
+    
+    return render(request, 'pcconfig/pc.html', {'pc': pc})
+
+"""Use a decorator user_passes_test to verify only the author has the right to edit their entries.
 Follow https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.decorators.user_passes_test for more info"""
 # @user_passes_test
 def editPC(request, PC_id):

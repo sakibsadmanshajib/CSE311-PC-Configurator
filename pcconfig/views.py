@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import *
@@ -20,7 +20,7 @@ def user_login(request):
                 return redirect(next)
             else:
                 messages.success(request, "You have successfully logged in!")
-                return redirect('webapp:order')
+                return redirect('pcconfig:home')
         else:
             messages.error(request, "Provide valid credentials.")
             return render(request, 'auth/login.html')
@@ -37,7 +37,7 @@ def user_signup(request):
 def user_logout(request):
     messages.success(request, "You have been logged out!")
     logout(request)
-    return redirect('webapp:login')
+    return redirect('pcconfig:login')
 
 def home(request):
     pc_list = PC.objects.all()
@@ -46,7 +46,13 @@ def home(request):
 
 @login_required
 def createPC(request):
-    # See Reference to add user https://www.youtube.com/watch?v=zJWhizYFKP0
+    # See Reference to add author https://www.youtube.com/watch?v=zJWhizYFKP0
+
+    cpu_list = CPU.objects.all()
+    ram_list = RAM.objects.all()
+    gpu_list = GPU.objects.all()
+    motherboard_list = Motherboard.objects.all()
+    storage_list = Storage.objects.all()
 
     if request.method == 'POST':
 
@@ -71,7 +77,7 @@ def createPC(request):
         
     else:
         form = AddPC()
-        return render(request, 'pcconfig/add.html', {'form': form})
+        return render(request, 'pcconfig/add.html', {'form': form, 'cpu_list': cpu_list, 'ram_list': ram_list, 'gpu_list': gpu_list, 'motherboard_list': motherboard_list, 'storage_list': storage_list})
 
 
 def viewPC(request, PC_id):
@@ -84,9 +90,43 @@ def viewPC(request, PC_id):
 
 """Use a decorator user_passes_test to verify only the author has the right to edit their entries.
 Follow https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.decorators.user_passes_test for more info"""
-# @user_passes_test
+
+# def checkAuthor(user, pc_id):
+#     PC = PC.objects.get(id=pc_id)
+#     return PC.author == user
+
+
+# @user_passes_test(checkAuthor, pc_id=PC_id)
+
+@user_passes_test(lambda u: u.is_superuser)  # Only Superusers can 
 def editPC(request, PC_id):
 
-    # edit PC entry.
+    pc = PC.objects.get(id=PC_id)
+    cpu_list = CPU.objects.all()
+    ram_list = RAM.objects.all()
+    gpu_list = GPU.objects.all()
+    motherboard_list = Motherboard.objects.all()
+    storage_list = Storage.objects.all()
 
-    pass
+    # edit PC entry.
+    if request.method == 'POST':
+        form = AddPC(request.POST)
+
+        if form.is_valid():
+            pc.cpu = form.cleaned_data['CPU']
+            pc.ram = form.cleaned_data['RAM']
+            pc.gpu = form.cleaned_data['GPU']
+            pc.motherboard = form.cleaned_data['Motherboard']
+            pc.storage = form.cleaned_data['Storage']
+            pc.price = CPU.objects.get(id=form.cleaned_data['CPU']).price + RAM.objects.get(id=form.cleaned_data['RAM']).price + GPU.objects.get(id=form.cleaned_data['GPU']).price + Motherboard.objects.get(id=form.cleaned_data['Motherboard']).price + Storage.objects.get(id=form.cleaned_data['Storage']).price
+            pc.save()
+            messages.success(request, "Successfully edited the PC!")
+            return redirect('pcconfig:viewPC', PC_id=pc.pc_id)
+
+        else:
+            messages.warning(request, "Couldn't add a new entry!")
+            return redirect('pcconfig:home')
+        
+    else:
+        form = AddPC()
+        return render(request, 'pcconfig/add.html', {'form': form, 'pc': pc, 'cpu_list': cpu_list, 'ram_list': ram_list, 'gpu_list': gpu_list, 'motherboard_list': motherboard_list, 'storage_list': storage_list})

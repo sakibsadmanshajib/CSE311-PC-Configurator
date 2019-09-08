@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1 style="width: 100%; margin: 20px; text-align: center">PC #{{ pc.pc_id }}</h1>
+
+<div style="margin-top: 40px">
+    {% if pc %}
+    <table class="table table-hover table-bordered">
+        <tbody>
+            <tr>
+                <td>CPU</td>
+                <td>{{ pc.cpu }}</td>
+            </tr>
+            <tr>
+                <td>RAM</td>
+                <td>{{ pc.ram }}</td>
+            </tr>
+            <tr>
+                <td>GPU</td>
+                <td>{{ pc.gpu }}</td>
+            </tr>
+            <tr>
+                <td>Motherboard</td>
+                <td>{{ pc.motherboard }}</td>
+            </tr>
+            <tr>
+                <td>Storage</td>
+                <td>{{ pc.storage }}</td>
+            </tr>
+            <tr>
+                <td>Price</td>
+                <td>{{ pc.price }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <p style="width: 100%; margin: 20px; text-align: center">Sorry, couldn't find any PCs in the database</p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block styles %}
+
+a, a:hover {
+color: black;
+}
+
+{% endblock %}
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+{% endblock %}
